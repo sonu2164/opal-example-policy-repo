@@ -1,34 +1,29 @@
-# Role-based Access Control (RBAC)
-# --------------------------------
-
 package app.rbac
 
+# Import necessary data utilities if needed
 # import data.utils
 
 # By default, deny requests
 default allow = false
 
-# Allow chefs to do anything
-
+# Allow admins to do anything
 allow {
-	user_is_admin
+    user_is_admin
 }
 
+# Allow access if the user is the owner of the note
 allow {
-	some i, j
-	user := data.users[i]
+    some i, j
+    user := data.users[i]
     note := data.notes[j]
-	user.id == input.user
-	note.id == input.note
-	user.id == note.owner
+    user.id == input.user
+    note.id == input.note
+    user.id == note.ownerId
 }
 
-
-
-# user_is_admin is true if...
-
+# user_is_admin is true if the user has an 'admin' role
 user_is_admin {
-	some i
-	data.users[i].id == input.user
-	data.users[i].role == "admin"
+    some i
+    data.users[i].id == input.user
+    data.users[i].role == "admin"
 }
